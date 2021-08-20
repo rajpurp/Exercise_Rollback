@@ -17,8 +17,8 @@ jobs:
           name: Ensure backend infrastructure exist
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/template.yml \
-              --stack-name prod-${CIRCLE_WORKFLOW_ID}
+            --template-file /files/template.yml \
+            --stack-name prod-${CIRCLE_WORKFLOW_ID}
       - run:
           when: on_fail
           name: Destroy environment
