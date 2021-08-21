@@ -68,10 +68,15 @@ jobs:
           name: Ensure backend infrastructure exist
           command: |
             aws cloudformation list-exports --query "Exports[?Name==\`PipelineID\`].Value" --no-paginate --output text >> ~/output.txt
+      - run:
+          name: Install tar/gzip utility
+          command: |
+            yum -y install tar
       - persist_to_workspace:
-          root: ~/
           paths:
             - project/.circleci/output.txt
+          root: ~/
+
 ############################################
   promote_to_production:
     docker:
