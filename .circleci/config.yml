@@ -43,26 +43,27 @@ jobs:
 ################################################
   get_last_deployment_id:
     docker:
-      - image: circleci/node:13.8.0
+#      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
+      - run:
+          name: Install tar/gzip utility
+          command: |
+            yum -y install tar
+#     - run:
+#          name: "upgrade packages."
+#            become: true
+#            apt:
+#              upgrade: "yes"
 #      - run:
-#          name: Install tar/gzip utility
-#          command: |
-#            yum -y install tar
-      - run:
-          name: "upgrade packages."
-            become: true
-            apt:
-              upgrade: "yes"
-      - run:
-          name: "install dependencies."
-            become: true
-            apt:
-              name: ["nodejs", "npm"]
-              update_cache: yes
+#          name: "install dependencies."
+#            become: true
+#            apt:
+#              name: ["nodejs", "npm"]
+#              update_cache: yes
       - run:
           name: Ensure backend infrastructure exist
           command: |
