@@ -49,6 +49,10 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
       - run:
+          name: Install tar/gzip utility
+          command: |
+            yum -y install tar
+      - run:
           name: Ensure backend infrastructure exist
           command: |
             aws cloudformation list-exports --query "Exports[?Name==\`PipelineID\`].Value" --no-paginate --output text > ~/output.txt
