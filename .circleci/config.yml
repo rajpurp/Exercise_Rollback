@@ -35,7 +35,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
       - run: |
-          aws cloudformation deploy --template-file ./bucket.yml --stack-name prod-${CIRCLE_WORKFLOW_ID:0:7} --parameter-overrides ID=rajpurp303828929336 --tags project=udapeople
+          aws cloudformation deploy --template-file .circleci//bucket.yml --stack-name prod-${CIRCLE_WORKFLOW_ID:0:7} --parameter-overrides ID=rajpurp303828929336 --tags project=udapeople
       - run: aws s3 sync . s3://"${CIRCLE_WORKFLOW_ID}" --delete
           
 # ${CIRCLE_WORKFLOW_ID:0:7} takes the first 7 chars of the variable CIRCLE_CI_WORKFLOW_ID
