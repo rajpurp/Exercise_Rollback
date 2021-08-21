@@ -26,7 +26,65 @@ jobs:
           name: Destroy environment
           command: |
             aws cloudformation delete-stack --stack-name prod-${CIRCLE_WORKFLOW_ID}
+###########################
+  create_and_deploy_front_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
+      - run:
+          name: Ensure backend infrastructure exist
+          command: |
+            aws cloudformation deploy --template-file bucket.yml --stack-name "${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID:0:7}"
+          
+# ${CIRCLE_WORKFLOW_ID:0:7} takes the first 7 chars of the variable CIRCLE_CI_WORKFLOW_ID
+
+################################################
+  get_last_deployment_id:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
+      - run:
+          name: Ensure backend infrastructure exist
+          command: |
+            aws cloudformation list-exports --query "Exports[?Name==\`PipelineID\`].Value" --no-paginate --output text > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
+############################################
+  promote_to_production:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
+      - run:
+          name: Ensure backend infrastructure exist
+          command: |
+            aws cloudformation deploy --template-file cloudfront.yml --stack-name production-distro --parameter-overrides PipelineID="${CIRCLE_WORKFLOW_ID}"
+#########################################
+  clean_up_old_front_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
+      - run:
+          name: Ensure backend infrastructure exist
+          command: |
+            aws s3 rm "s3://${OldPipelineID}" --recursive 
+            aws cloudformation delete-stack --stack-name "${PreviousPipelineID}"
 workflows:
-  my_workflow:
+  default:
     jobs:
-      - create_infrastructure
+      - create_and_deploy_front_end
+      - promote_to_production
+          requires: [create_and_deploy_front_end]
