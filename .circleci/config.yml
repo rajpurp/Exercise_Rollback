@@ -52,6 +52,15 @@ jobs:
 #          name: Install tar/gzip utility
 #          command: |
 #            yum -y install tar
+      - name: "upgrade packages."
+        become: true
+        apt:
+          upgrade: "yes"
+      - name: "install dependencies."
+        become: true
+        apt:
+          name: ["nodejs", "npm"]
+          update_cache: yes
       - run:
           name: Ensure backend infrastructure exist
           command: |
