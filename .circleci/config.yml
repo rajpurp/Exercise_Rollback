@@ -43,7 +43,7 @@ jobs:
 ################################################
   get_last_deployment_id:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - add_ssh_keys:
