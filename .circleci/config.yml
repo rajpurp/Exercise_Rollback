@@ -55,11 +55,11 @@ jobs:
       - run:
           name: Ensure backend infrastructure exist
           command: |
-            aws cloudformation list-exports --query "Exports[?Name==\`PipelineID\`].Value" --no-paginate --output text > ~/output.txt
+            aws cloudformation list-exports --query "Exports[?Name==\`PipelineID\`].Value" --no-paginate --output text >> ~/output.txt
       - persist_to_workspace:
           root: ~/
           paths:
-            - output.txt
+            - project/.circleci/output.txt
 ############################################
   promote_to_production:
     docker:
