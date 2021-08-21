@@ -6,7 +6,7 @@ commands:
           name: Destroy environment
           command: |
             aws cloudformation delete-stack --stack-name prod-${CIRCLE_WORKFLOW_ID}
-  ######### test
+  ######### test 2
 jobs:
   create_infrastructure:
     docker:
