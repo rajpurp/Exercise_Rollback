@@ -34,10 +34,11 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
-      - run:
-          name: Ensure backend infrastructure exist
-          command: |
-            aws cloudformation deploy --template-file .circleci/bucket.yml --stack-name "bucket-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides NAME="bucket-${CIRCLE_WORKFLOW_ID:0:7}"
+      - run: |
+          aws cloudformation deploy \
+            --template-file bucket.yml \
+            --stack-name "${CIRCLE_WORKFLOW_ID}" \
+            --parameter-overrides NAME="${CIRCLE_WORKFLOW_ID}"
       - run: aws s3 sync . s3://"${CIRCLE_WORKFLOW_ID}" --delete
           
 # ${CIRCLE_WORKFLOW_ID:0:7} takes the first 7 chars of the variable CIRCLE_CI_WORKFLOW_ID
