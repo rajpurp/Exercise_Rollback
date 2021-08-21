@@ -37,7 +37,7 @@ jobs:
       - run: |
           aws cloudformation deploy \
           --template-file .circleci/bucket.yml \
-          --stack-name prod-${CIRCLE_WORKFLOW_ID:0:7 \ # ${CIRCLE_WORKFLOW_ID:0:7} takes the first 7 chars of the variable CIRCLE_CI_WORKFLOW_ID
+          --stack-name prod-${CIRCLE_WORKFLOW_ID:0:7} \ # ${CIRCLE_WORKFLOW_ID:0:7} takes the first 7 chars of the variable CIRCLE_CI_WORKFLOW_ID
           --parameter-overrides PipelineID=prod-${CIRCLE_WORKFLOW_ID:0:7}
       - run: aws s3 sync . s3://"${CIRCLE_WORKFLOW_ID}" --delete
           
