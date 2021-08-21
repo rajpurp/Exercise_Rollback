@@ -36,7 +36,7 @@ jobs:
           fingerprints: ["87:e7:7f:be:57:f6:0b:b5:e8:44:f2:68:2b:79:4a:e9"] 
       - run: |
           aws cloudformation deploy \
-            --template-file bucket.yml \
+            --template-file .circleci/bucket.yml \
             --stack-name "${CIRCLE_WORKFLOW_ID}" \
             --parameter-overrides NAME="${CIRCLE_WORKFLOW_ID}"
       - run: aws s3 sync . s3://"${CIRCLE_WORKFLOW_ID}" --delete
